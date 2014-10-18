@@ -172,6 +172,7 @@ void Game::ResetLevel()
 		for (int j = 0; j < 32; j++)
 		{
 			map[i][j].type = WALL;
+			map[i][j].gold = 0;
 		}
 	}
 }
@@ -259,6 +260,7 @@ void Game::Init()
 	event_map["reset"] = thor::Action(sf::Keyboard::R, thor::Action::PressOnce);
 	event_map["toggle"] = thor::Action(sf::Keyboard::T, thor::Action::PressOnce);
 	event_map["mute"] = thor::Action(sf::Keyboard::M, thor::Action::PressOnce);
+	event_map["pickup"] = thor::Action(sf::Keyboard::G, thor::Action::PressOnce);
 	event_map["clickl"] = thor::Action(sf::Mouse::Left, thor::Action::Hold);
 
 	window.create(sf::VideoMode(480, 420, 32), title, sf::Style::Titlebar | sf::Style::Close);
@@ -363,6 +365,15 @@ void Game::Start()
 			}
 			if (map[player.x][player.y + 1].bounds.getFillColor().r != 150)
 				player.y++;
+			UpdateEnemies();
+		}
+		else if (event_map.isActive("pickup"))
+		{
+			if (map[player.x][player.y].gold > 0)
+			{
+				player.gold += map[player.x][player.y].gold;
+				map[player.x][player.y].gold = 0;
+			}
 			UpdateEnemies();
 		}
 
