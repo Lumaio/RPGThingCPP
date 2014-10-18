@@ -1,6 +1,5 @@
 #include <iostream>
 #include "Game.h"
-#include "Enemy.h"
 
 using namespace std;
 

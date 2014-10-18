@@ -26,7 +26,6 @@ Game::Game(string t)
 
 void Game::GenerateLevel(int passes)
 {
-	//TODO: Connect Rooms
 
 	Console::Clear();
 
@@ -147,6 +146,22 @@ void Game::GenerateLevel(int passes)
 		} while (map[ex][ey].type != FLOOR);
 
 	}
+
+	int gold_sources = 5;
+	int i = 0;
+	do
+	{
+		int gx = rand() % 47;
+		int gy = rand() % 31;
+
+		if (map[gx][gy].type == FLOOR)
+		{
+			map[gx][gy].gold += rand() % 10+1;
+			i++;
+			cout << "GOOOOLLLD!!  " << map[gx][gy].gold << endl;
+		}
+
+	} while (i < gold_sources);
 
 }
 
@@ -280,6 +295,7 @@ void Game::Init()
 
 	soundtrack.openFromFile("res/track.ogg");
 
+	// Fill Array And Set Positions
 	for (int i = 0; i < 48; i++)
 	{
 		for (int j = 0; j < 32; j++)
@@ -291,7 +307,6 @@ void Game::Init()
 	}
 
 	GenerateLevel(10);
-	cout << player.x << ":" << player.y << endl;
 
 }
 
@@ -377,7 +392,7 @@ void Game::Start()
 		}
 
 		char buff[100];
-		sprintf_s(buff, "HP: %d\nX: %d\nY: %d\n", player.health, player.x, player.y);
+		sprintf_s(buff, "HP: %d\nGOLD: %d\nX: %d\nY: %d\n", player.health, player.gold, player.x, player.y);
 		stats_s = buff;
 		stats.setString(stats_s);
 
@@ -385,14 +400,17 @@ void Game::Start()
 		{
 			for (int j = 0; j < 32; j++)
 			{
-				if (i == player.x && j == player.y)
-					map[i][j].bounds.setFillColor(sf::Color(0, 0, 100, 255));
-				else if (map[i][j].type == WALL)
+				if (map[i][j].type == WALL)   // WALL Texture
 					map[i][j].bounds.setFillColor(sf::Color(100, 100, 100, 255));
-				else if (map[i][j].type == FLOOR)
+				if (map[i][j].type == FLOOR)  // FLOOR Texture
 					map[i][j].bounds.setFillColor(sf::Color(50, 50, 50, 255));
-				else if (map[i][j].type == NODRAW)
-					map[i][j].bounds.setFillColor(sf::Color(200,105,180));
+				if (map[i][j].type == NODRAW) // NODRAW Texure
+					map[i][j].bounds.setFillColor(sf::Color(200, 105, 180));
+
+				if (map[i][j].gold > 0) // Found some gold
+					map[i][j].bounds.setFillColor(sf::Color(155, 155, 0));
+				if (i == player.x && j == player.y) // Found the player
+					map[i][j].bounds.setFillColor(sf::Color(0, 0, 100, 255));
 
 				for (int z = 0; z < enemies.size(); z++)
 				{
@@ -400,7 +418,7 @@ void Game::Start()
 					{
 						enemies.erase(enemies.begin() + z);
 					}
-					if (i == enemies[z].GetX() && j == enemies[z].GetY())
+					if (i == enemies[z].GetX() && j == enemies[z].GetY()) // Found an enemy
 					{
 						map[i][j].bounds.setFillColor(sf::Color(150, 0, 0, 255));
 					}
