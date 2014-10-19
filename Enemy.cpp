@@ -17,6 +17,7 @@ void Enemy::SetPosition(int xx, int yy)
 	x = xx;
 	y = yy;
 }
+
 void Enemy::SetHP(int hp)
 {
 	health = hp;

@@ -167,6 +167,7 @@ void Game::GenerateLevel(int passes)
 
 void Game::ResetLevel()
 {
+	enemies.clear();
 	for (int i = 0; i < 48; i++)
 	{
 		for (int j = 0; j < 32; j++)
