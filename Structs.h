@@ -3,8 +3,8 @@
 
 struct Player
 {
-	int x, y, health, gold;
-	Player() { x = 1; y = 1; health = 5; gold = 0; }
+	int x, y, health, max_health, gold, turns_since_attack;
+	Player() { x = 1; y = 1; health = 5; max_health = 5; gold = 0; turns_since_attack = 0; }
 };
 
 struct TILE

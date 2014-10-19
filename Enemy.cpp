@@ -55,6 +55,7 @@ void Enemy::Update(Player &ply, TILE map[48][32])
 	else if (foundplayer)
 	{
 		ply.health -= 1;
+		ply.turns_since_attack = 0;
 	}
 	else
 	{

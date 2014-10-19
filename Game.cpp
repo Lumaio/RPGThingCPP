@@ -221,6 +221,11 @@ void Game::UpdateEnemies()
 		Enemy &e = enemies[i];
 		e.Update(player, map);
 	}
+	if (player.turns_since_attack >= 3 && player.health < player.max_health)
+	{
+		player.health++;
+		player.turns_since_attack = 0;
+	}
 }
 
 void Game::FOV()
@@ -317,6 +322,9 @@ void Game::Start()
 //	soundtrack.play();
 	while (window.isOpen())
 	{
+		if (player.health <= 0)
+			window.close();
+
 		event_map.update(window);
 
 		// Window Close Event
@@ -331,7 +339,10 @@ void Game::Start()
 					e.SetHP(e.GetHP() - 1);
 			}
 			if (map[player.x - 1][player.y].bounds.getFillColor().r != 150)
+			{
 				player.x--;
+				player.turns_since_attack++;
+			}
 			UpdateEnemies();
 		}
 		else if (event_map.isActive("right") && player.x < 47 && map[player.x + 1][player.y].type != WALL)
@@ -342,7 +353,10 @@ void Game::Start()
 					e.SetHP(e.GetHP() - 1);
 			}
 			if (map[player.x + 1][player.y].bounds.getFillColor().r != 150)
+			{
 				player.x++;
+				player.turns_since_attack++;
+			}
 			UpdateEnemies();
 		}
 		else if (event_map.isActive("up") && player.y > 0 && map[player.x][player.y - 1].type != WALL)
@@ -353,7 +367,10 @@ void Game::Start()
 					e.SetHP(e.GetHP() - 1);
 			}
 			if (map[player.x][player.y - 1].bounds.getFillColor().r != 150)
+			{
 				player.y--;
+				player.turns_since_attack++;
+			}
 			UpdateEnemies();
 		}
 		else if (event_map.isActive("down") && player.y < 31 && map[player.x][player.y + 1].type != WALL)
@@ -364,7 +381,10 @@ void Game::Start()
 					e.SetHP(e.GetHP() - 1);
 			}
 			if (map[player.x][player.y + 1].bounds.getFillColor().r != 150)
+			{
 				player.y++;
+				player.turns_since_attack++;
+			}
 			UpdateEnemies();
 		}
 		else if (event_map.isActive("pickup"))
